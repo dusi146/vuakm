@@ -52,90 +52,74 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Hide scrollbar initially for intro */
+            overflow-y: auto; /* Allow scrolling if content overflows */
             transition: background-color var(--transition-speed) var(--transition-ease),
                         color var(--transition-speed) var(--transition-ease);
         }
 
-        /* Intro Screen */
-        #intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--card-background); /* White background for intro */
-            color: var(--primary-color);
-            display: flex;
-            flex-direction: column; /* Allow content to stack vertically */
+        /* Intro Section */
+        #intro-section {
+            background-color: var(--card-background);
+            padding: 45px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 650px;
+            width: 90%;
+            display: flex; /* Use flex for centering content easily */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Pacifico', cursive; /* Cute, rounded font for intro */
-            font-size: 5em;
-            font-weight: 700;
-            letter-spacing: 3px;
-            opacity: 1;
-            transform: scale(1);
-            transition: opacity 1.2s ease-in-out, /* Faster fade */
-                        transform 1.2s ease-in-out, /* Faster shrink */
-                        clip-path 1.2s ease-in-out; /* Clip-path also faster */
-            z-index: 1000;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
-            clip-path: circle(100%); /* Start with full circle */
-            will-change: opacity, transform, clip-path; /* Optimize for animation performance */
+            min-height: 300px; /* Make intro box a bit taller */
+            transition: opacity 0.7s var(--transition-ease),
+                        transform 0.7s var(--transition-ease),
+                        background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease);
+            z-index: 2; /* Ensure it's above stars */
+            position: relative; /* For z-index to work */
         }
 
-        #intro-screen.hidden {
+        #intro-section.hidden {
             opacity: 0;
-            transform: scale(0.7); /* Shrink slightly */
-            clip-path: circle(0%); /* Collapse to a point */
+            transform: translateY(-50px); /* Move up slightly when hidden */
+            pointer-events: none; /* Disable interaction */
         }
 
-        #intro-screen.complete {
-            display: none; /* Fully hide after transition */
+        #intro-section h1 {
+            color: var(--primary-color);
+            margin-bottom: 35px;
+            font-family: 'Pacifico', cursive; /* Cute font for main title */
+            font-size: 3em;
+            transition: color var(--transition-speed) var(--transition-ease);
         }
 
-        #intro-text {
-            margin-bottom: 30px; /* Space between text and button */
-        }
-
-        .go-button-container {
-            background-color: var(--secondary-color);
-            padding: 10px 25px; /* Adjust padding for the frame */
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            opacity: 0; /* Hidden initially */
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Removed delay here */
-        }
-
-        .go-button-container.visible {
-            opacity: 1;
-            transform: translateY(0);
+        #intro-section p {
+            font-size: 1.2em;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
         #go-button {
-            background: none;
-            border: none;
+            background-color: var(--secondary-color);
             color: white;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2em;
-            font-weight: 700;
+            padding: 18px 40px;
+            border: none;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            padding: 5px 10px; /* Padding inside the button for larger click area */
-            transition: color 0.2s ease, transform 0.1s ease;
+            font-size: 1.5em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
 
         #go-button:hover {
-            color: #EEEEEE; /* Slightly lighter white on hover */
-            transform: scale(1.05);
+            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
         }
 
-        #go-button:active {
-            transform: scale(0.98);
-        }
-
-        /* Main Content */
+        /* Main Content - Hidden by default */
         #main-content {
             background-color: var(--card-background);
             padding: 45px;
@@ -144,22 +128,25 @@
             text-align: center;
             max-width: 650px;
             width: 90%;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1s var(--transition-ease),
-                        transform 1s var(--transition-ease),
+            opacity: 0; /* Hidden by default */
+            transform: translateY(50px); /* Start from below */
+            position: relative; /* Needed for theme selector positioning */
+            transition: opacity 0.7s var(--transition-ease),
+                        transform 0.7s var(--transition-ease),
                         background-color var(--transition-speed) var(--transition-ease),
                         color var(--transition-speed) var(--transition-ease),
                         box-shadow var(--transition-speed) var(--transition-ease);
-            position: relative; /* Needed for theme selector positioning */
+            pointer-events: none; /* Disable interaction when hidden */
+            z-index: 2; /* Ensure it's above stars */
         }
-
+        
         #main-content.visible {
             opacity: 1;
             transform: translateY(0);
+            pointer-events: all; /* Enable interaction when visible */
         }
 
-        /* Theme Selector button (new position) */
+        /* Theme Selector button (top right) */
         #theme-select-btn-top {
             position: absolute;
             top: 20px; /* Distance from top */
@@ -192,9 +179,86 @@
         #theme-select-btn-top:active {
             transform: scale(0.98);
         }
+        
+        /* J97 Music Button (top left) */
+        #j97-music-btn-main {
+            position: absolute;
+            top: 20px; /* Distance from top */
+            left: 20px; /* Distance from left */
+            background-color: #A0522D; /* Sienna - màu đất */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Make it round */
+            width: 50px; /* Icon size */
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9em; /* Smaller font for "J97" */
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            z-index: 10; /* Ensure it's above other elements */
+            text-align: center;
+            text-decoration: none; /* In case it's an anchor tag */
+            line-height: 1; /* For vertical alignment of text */
+        }
+
+        #j97-music-btn-main:hover {
+            background-color: color-mix(in srgb, #A0522D 85%, black);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        #j97-music-btn-main:active {
+            transform: scale(0.98);
+        }
+
+        /* Music Options (J97) Popup */
+        #j97-music-popup {
+            position: absolute;
+            top: 80px; /* Below J97 button */
+            left: 20px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 15px;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 10px;
+            z-index: 11; /* Above J97 button and main content */
+            min-width: 150px;
+            text-align: center;
+        }
+
+        #j97-music-popup.visible {
+            display: flex;
+        }
+
+        .music-option {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px; /* Rounded corners for buttons in popup */
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .music-option:hover {
+            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
+            transform: translateY(-2px);
+        }
+        .music-option.selected {
+            background-color: var(--primary-color); /* Highlight selected song */
+            border: 2px solid white;
+            transform: scale(1.05);
+        }
 
 
-        h1 {
+        .main-title { /* Used for both intro and main content H1 */
             color: var(--primary-color);
             margin-bottom: 35px;
             font-family: 'Pacifico', cursive; /* Cute font for main title */
@@ -253,7 +317,7 @@
             box-shadow: var(--box-shadow);
             margin-top: 35px;
             text-align: left;
-            display: none;
+            display: none; /* Hidden by default, shown by JS */
             animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
             transition: background-color var(--transition-speed) var(--transition-ease),
                         color var(--transition-speed) var(--transition-ease),
@@ -352,7 +416,7 @@
             box-shadow: var(--box-shadow);
             margin-top: 35px;
             text-align: center;
-            display: none;
+            display: none; /* Hidden by default, shown by JS */
             animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
             transition: background-color var(--transition-speed) var(--transition-ease),
                         color var(--transition-speed) var(--transition-ease),
@@ -372,6 +436,7 @@
             justify-content: center;
             gap: 25px;
             flex-wrap: wrap;
+            margin-bottom: 30px; /* Khoảng cách dưới các lựa chọn theme */
         }
 
         .theme-option {
@@ -409,13 +474,10 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            #intro-screen {
-                font-size: 3.5em;
-            }
-            #main-content {
+            #intro-section, #main-content {
                 padding: 30px;
             }
-            h1 {
+            #intro-section h1, .main-title {
                 font-size: 2.2em;
             }
             .menu-item {
@@ -430,26 +492,34 @@
                 width: 80px;
                 height: 80px;
             }
-            #theme-select-btn-top {
+            #theme-select-btn-top, #j97-music-btn-main {
                 width: 40px;
                 height: 40px;
                 font-size: 0.8em;
                 top: 15px;
-                right: 15px;
+                right: 15px; /* For theme button */
+                left: 15px; /* For J97 button */
+            }
+            #j97-music-popup {
+                top: 70px;
+                left: 15px;
             }
         }
 
         @media (max-width: 480px) {
-            #intro-screen {
-                font-size: 2.5em;
-                letter-spacing: 1px;
-            }
-            #main-content {
+            #intro-section, #main-content {
                 padding: 20px;
                 margin: 20px;
             }
-            h1 {
+            #intro-section h1, .main-title {
                 font-size: 1.8em;
+            }
+            #intro-section p {
+                font-size: 1em;
+            }
+            #go-button {
+                font-size: 1.2em;
+                padding: 15px 30px;
             }
             .menu-item {
                 font-size: 1em;
@@ -470,32 +540,80 @@
                 height: 70px;
                 font-size: 0.8em;
             }
-            #theme-select-btn-top {
+            #theme-select-btn-top, #j97-music-btn-main {
                 width: 35px;
                 height: 35px;
                 font-size: 0.7em;
                 top: 10px;
-                right: 10px;
+                right: 10px; /* For theme button */
+                left: 10px; /* For J97 button */
+            }
+            #j97-music-popup {
+                top: 60px;
+                left: 10px;
+                min-width: 120px;
+            }
+        }
+
+        /* Youtube Player (hidden) */
+        #youtube-player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Starfall Effect */
+        .star {
+            position: fixed;
+            background-color: white;
+            border-radius: 50%;
+            animation: fall linear infinite;
+            z-index: 1; /* Under main content */
+            opacity: 0; /* Hidden until main content is visible */
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100vh) translateX(0);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(100vh) translateX(var(--star-drift));
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
 
-    <div id="intro-screen">
-        <div id="intro-text">Dusi Vua KM</div>
-        <div class="go-button-container" id="go-button-container">
-            <button id="go-button">GO</button>
-        </div>
+    <div id="intro-section">
+        <h1 class="main-title">Chào mừng đến với Dusi Vua KM</h1>
+        <p>Đây là trang web hỗ trợ bạn trong việc tính toán và tối ưu hóa các chiến lược nhỏ.</p>
+        <button id="go-button">GO</button>
     </div>
 
     <div id="main-content">
         <button id="theme-select-btn-top">Giao diện</button>
+        <button id="j97-music-btn-main">J97</button>
         
-        <h1>Chào mừng đến với Dusi Vua KM</h1>
+        <div id="j97-music-popup">
+            <button class="music-option" data-video-id="r5Lq2Y1K220">Hồng Nhan</button>
+            <button class="music-option" data-video-id="E80e9D51L3Y">Bạc Phận</button>
+            <button class="music-option" data-video-id="G9bM-dGqQeM">Sống Chó</button>
+            <button class="music-option" id="stop-music-btn">Dừng nhạc</button>
+        </div>
+
+        <h1 class="main-title">Chào mừng đến với Dusi Vua KM</h1>
         <button class="menu-item" id="bot-calculate-btn">1. BOT tính ít lỗ nhất</button>
         <button class="menu-item disabled">2. Update...</button>
         <button class="menu-item disabled">3. Update...</button>
+
         <div id="calculator-section">
             <h2>BOT tính ít lỗ nhất</h2>
             <div class="input-group">
@@ -520,10 +638,147 @@
         </div>
     </div>
 
+    <div id="youtube-player-container">
+        <div id="youtube-player"></div>
+    </div>
+
     <script>
+        // --- YouTube IFrame Player API Load ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // YouTube API URL
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // --- Global Variables for YouTube Player ---
+        let player;
+        let currentPlayingVideoId = null;
+        let isPlayerReady = false;
+
+        // --- YouTube API Functions ---
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0', // Hidden
+                width: '0',  // Hidden
+                videoId: null, // No video initially
+                playerVars: {
+                    'autoplay': 1, // Will be blocked by browsers, but API needs it
+                    'controls': 0, // Hide controls
+                    'loop': 1,      // Loop single video by setting playlist to itself
+                    'playlist': '', // Will be set dynamically
+                    'disablekb': 1, // Disable keyboard controls
+                    'fs': 0,        // Disable fullscreen button
+                    'modestbranding': 1, // Minimize YouTube branding
+                    'mute': 0,      // Not muted by default (user can mute if needed)
+                    'playsinline': 1, // Play inline on mobile
+                    'enablejsapi': 1 // Enable JS control
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("YouTube Player is Ready.");
+            isPlayerReady = true;
+            // No automatic play here, waits for user interaction on J97 button
+        }
+
+        function onPlayerStateChange(event) {
+            // Check if video ended (state = 0) AND there's a video playing
+            if (event.data === YT.PlayerState.ENDED && currentPlayingVideoId) {
+                // If the video ended, play it again to loop
+                player.loadVideoById({
+                    videoId: currentPlayingVideoId,
+                    startSeconds: 0 // Start from the beginning
+                });
+                player.playVideo(); // Ensure it plays again
+            }
+        }
+
+        // Function to play a specific YouTube video
+        function playYoutubeVideo(videoId) {
+            if (!isPlayerReady) {
+                console.warn("YouTube Player not ready yet. Please try again.");
+                return;
+            }
+            if (currentPlayingVideoId === videoId) {
+                // If the same video is already playing, do nothing
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.playVideo().catch(e => console.error("Error resuming video:", e));
+                }
+                return;
+            }
+
+            currentPlayingVideoId = videoId; // Update currently playing video ID
+            player.loadVideoById({
+                videoId: videoId,
+                // To loop a single video, playlist parameter must contain the videoId itself
+                'playlist': videoId,
+                startSeconds: 0 // Start from the beginning
+            });
+            player.playVideo().catch(e => {
+                console.error("Lỗi khi phát video:", e);
+                // Inform user if autoplay is blocked
+                alert("Trình duyệt có thể chặn tự động phát. Vui lòng tương tác (ví dụ: click vào trang) để bật nhạc.");
+            });
+        }
+
+        // Function to stop music
+        function stopYoutubeVideo() {
+            if (player && player.getPlayerState() !== YT.PlayerState.ENDED) {
+                player.stopVideo();
+                currentPlayingVideoId = null;
+                // Remove 'selected' class from all music options
+                document.querySelectorAll('.music-option').forEach(btn => btn.classList.remove('selected'));
+            }
+        }
+
+        // --- Starfall Effect ---
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            document.body.appendChild(star);
+
+            const size = Math.random() * 3 + 1; // 1px to 4px
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+            star.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5s to 10s
+            star.style.animationDelay = `${Math.random() * 0}s`; // Delay for staggered start
+            star.style.setProperty('--star-drift', `${(Math.random() - 0.5) * 200}px`); // Drift left/right
+            star.style.opacity = `${Math.random() * 0.7 + 0.3}`; // Random opacity
+
+            star.addEventListener('animationend', () => {
+                star.remove(); // Remove star after animation ends
+            });
+        }
+
+        let starInterval;
+        function startStarfall() {
+            // Only start if intro is hidden and main content is visible
+            if (!document.getElementById('intro-section').classList.contains('hidden') && 
+                document.getElementById('main-content').classList.contains('visible')) {
+                // To avoid duplicate intervals
+                if (starInterval) clearInterval(starInterval); 
+                starInterval = setInterval(createStar, 200); // Create a star every 200ms
+            } else if (document.getElementById('intro-section').classList.contains('hidden') && 
+                       document.getElementById('main-content').classList.contains('visible') && !starInterval) {
+                 starInterval = setInterval(createStar, 200);
+            }
+        }
+
+        function stopStarfall() {
+            clearInterval(starInterval);
+            starInterval = null;
+            document.querySelectorAll('.star').forEach(star => star.remove()); // Remove all existing stars
+        }
+
+
+        // --- DOMContentLoaded Event Listener ---
         document.addEventListener('DOMContentLoaded', () => {
-            const introScreen = document.getElementById('intro-screen');
-            const goButtonContainer = document.getElementById('go-button-container');
+            const introSection = document.getElementById('intro-section');
             const goButton = document.getElementById('go-button');
             const mainContent = document.getElementById('main-content');
             const botCalculateBtn = document.getElementById('bot-calculate-btn');
@@ -536,115 +791,11 @@
             const resultDiv = document.getElementById('result');
             const themeOptions = document.querySelectorAll('.theme-option');
 
-            // --- Intro Animation & GO button logic ---
-            // Show GO button after a short delay (e.g., 1.5 seconds after page load)
-            setTimeout(() => {
-                goButtonContainer.classList.add('visible');
-            }, 1500); // Adjust delay as needed for intro text to settle
-
-            // When GO button is clicked
-            goButton.addEventListener('click', () => {
-                introScreen.classList.add('hidden'); // Start intro screen hiding animation (opacity, transform, clip-path)
-
-                // After intro screen finishes hiding (duration of CSS transition for 'hidden' class, which is 1.2s)
-                setTimeout(() => {
-                    introScreen.classList.add('complete'); // Completely remove intro from flow
-                    document.body.style.overflow = 'auto'; // Re-enable scroll
-                    mainContent.classList.add('visible'); // Show main content
-                }, 1200); // This delay should match the 'transition' duration of #intro-screen
-            });
-
-
-            // --- Navigation Function ---
-            function showSection(sectionToShow) {
-                // Hide all sections first
-                calculatorSection.style.display = 'none';
-                themeSection.style.display = 'none';
-                resultDiv.style.display = 'none'; // Also hide result when switching sections
-
-                // Show the requested section
-                if (sectionToShow) {
-                    sectionToShow.style.display = 'block';
-                    // Scroll to the section if it's not the initial load of main content
-                    // Check if mainContent is already visible before trying to scroll sections within it
-                    if (mainContent.classList.contains('visible')) {
-                        sectionToShow.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
-            }
-
-            // --- Menu Item Click Handlers ---
-            botCalculateBtn.addEventListener('click', () => {
-                showSection(calculatorSection);
-                // Clear inputs when showing calculator
-                cuaTienInput.value = '';
-                conTienInput.value = '';
-            });
-
-            themeSelectBtnTop.addEventListener('click', () => {
-                showSection(themeSection);
-            });
-
-            // --- BOT Calculate Logic ---
-            calculateLossBtn.addEventListener('click', () => {
-                const cuaTien = parseFloat(cuaTienInput.value);
-                const conTien = parseFloat(conTienInput.value);
-                const tyLeCai = 0.95; // Tỷ lệ ăn Cái (0.95 cho mỗi 1 đơn vị đặt)
-                const tyLeCon = 1;    // Tỷ lệ ăn Con (1 cho mỗi 1 đơn vị đặt)
-
-                let resultText = '';
-
-                if (isNaN(cuaTien) && isNaN(conTien)) {
-                    resultText = 'Vui lòng nhập số tiền bên **Cái** hoặc bên **Con** để tính toán.';
-                } else if (!isNaN(cuaTien) && isNaN(conTien)) {
-                    const tienConToBet = (cuaTien * (1 + tyLeCai)) / 2;
-                    const expectedLoss = cuaTien - tienConToBet;
-
-                    resultText = `Để lỗ ít nhất khi đánh **${cuaTien.toLocaleString('vi-VN')}** bên Cái, bạn nên đánh **${tienConToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** bên Con.`;
-                    resultText += `<br>Khoản lỗ cố định (ít nhất): **${Math.abs(expectedLoss).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** mỗi lần cược.`;
-
-                } else if (isNaN(cuaTien) && !isNaN(conTien)) {
-                    const tienCaiToBet = (2 * conTien) / (1 + tyLeCai);
-                    const expectedLoss = tienCaiToBet - conTien;
-
-                    resultText = `Để lỗ ít nhất khi đánh **${conTien.toLocaleString('vi-VN')}** bên Con, bạn nên đánh **${tienCaiToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** bên Cái.`;
-                    resultText += `<br>Khoản lỗ cố định (ít nhất): **${Math.abs(expectedLoss).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** mỗi lần cược.`;
-
-                } else {
-                    resultText = 'Vui lòng chỉ nhập số tiền vào **MỘT** trong hai ô (Con hoặc Cái) để tính toán.';
-                }
-
-                resultDiv.innerHTML = resultText;
-                resultDiv.style.display = 'block';
-            });
-
-            // Clear other input when one is typed into
-            cuaTienInput.addEventListener('input', () => {
-                if (cuaTienInput.value !== '') {
-                    conTienInput.value = '';
-                }
-            });
-
-            conTienInput.addEventListener('input', () => {
-                if (conTienInput.value !== '') {
-                    cuaTienInput.value = '';
-                }
-            });
-
-            // --- Theme Selector Logic ---
-            themeOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    themeOptions.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-
-                    const theme = option.dataset.theme;
-                    document.body.className = '';
-                    if (theme !== 'default') {
-                        document.body.classList.add(`${theme}-theme`);
-                    }
-                    localStorage.setItem('selectedTheme', theme);
-                });
-            });
+            // Music Buttons
+            const j97MusicBtnMain = document.getElementById('j97-music-btn-main');
+            const j97MusicPopup = document.getElementById('j97-music-popup');
+            const musicOptions = document.querySelectorAll('#j97-music-popup .music-option');
+            const stopMusicBtn = document.getElementById('stop-music-btn');
 
             // Load saved theme on page load
             const savedTheme = localStorage.getItem('selectedTheme');
@@ -658,6 +809,150 @@
                     }
                 });
             }
+
+            // --- Intro and Main Content Visibility ---
+            goButton.addEventListener('click', () => {
+                introSection.classList.add('hidden'); // Hide intro
+                // Use a timeout to ensure transition finishes before changing display
+                setTimeout(() => {
+                    introSection.style.display = 'none';
+                    mainContent.style.display = 'block'; // Make main content block
+                    mainContent.classList.add('visible'); // Show main content with animation
+                    startStarfall(); // Start starfall when main content is visible
+                }, 700); // Match CSS transition duration
+            });
+
+            // --- Navigation Function ---
+            function showSection(sectionToShow) {
+                calculatorSection.style.display = 'none';
+                themeSection.style.display = 'none';
+                resultDiv.style.display = 'none';
+                j97MusicPopup.classList.remove('visible'); // Hide music popup when changing section
+
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                    // Optional: scroll to the top of the new section
+                    sectionToShow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            // --- Menu Button Event Listeners ---
+            botCalculateBtn.addEventListener('click', () => {
+                showSection(calculatorSection);
+                cuaTienInput.value = '';
+                conTienInput.value = '';
+            });
+
+            themeSelectBtnTop.addEventListener('click', () => {
+                showSection(themeSection);
+            });
+
+            // --- J97 Music Button Logic ---
+            j97MusicBtnMain.addEventListener('click', (event) => {
+                // Toggle visibility of the music popup
+                j97MusicPopup.classList.toggle('visible');
+                event.stopPropagation(); // Prevent click from bubbling to document.body
+            });
+
+            // Hide music popup when clicking anywhere else on the document
+            document.body.addEventListener('click', (event) => {
+                if (j97MusicPopup.classList.contains('visible') && !j97MusicPopup.contains(event.target) && event.target !== j97MusicBtnMain) {
+                    j97MusicPopup.classList.remove('visible');
+                }
+            });
+
+            // Event listeners for individual music options
+            musicOptions.forEach(button => {
+                button.addEventListener('click', () => {
+                    const videoId = button.dataset.videoId;
+                    // Remove 'selected' from all and add to clicked button
+                    musicOptions.forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    
+                    playYoutubeVideo(videoId); // Play selected music
+                });
+            });
+
+            // Event listener for Stop Music button
+            stopMusicBtn.addEventListener('click', () => {
+                stopYoutubeVideo();
+            });
+
+            // --- Initial Music Play on First User Interaction ---
+            let hasUserInteractedForMusic = false;
+            // This event is crucial for overcoming browser autoplay restrictions
+            document.body.addEventListener('click', () => {
+                if (!hasUserInteractedForMusic && isPlayerReady && currentPlayingVideoId) {
+                    // Only try to play if a video ID is set (from a previous selection)
+                    player.playVideo().catch(e => {
+                        console.warn("Lỗi khi phát video sau tương tác ban đầu:", e);
+                    });
+                    hasUserInteractedForMusic = true; // Flag to prevent re-execution
+                }
+            }, { once: true }); // Only listen for the first click
+
+            // --- Calculator Logic ---
+            calculateLossBtn.addEventListener('click', () => {
+                const cuaTien = parseFloat(cuaTienInput.value);
+                const conTien = parseFloat(conTienInput.value);
+                const tyLeCai = 0.95; // Tỷ lệ ăn Cái (0.95 cho mỗi 1 đơn vị đặt)
+
+                let resultText = '';
+                let isCalculationPossible = false;
+
+                if (!isNaN(cuaTien) && isNaN(conTien)) {
+                    // Chỉ nhập tiền Cái
+                    const tienConToBet = (cuaTien * (1 + tyLeCai)) / 2;
+                    resultText = `Con đánh ${tienConToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+                    isCalculationPossible = true;
+                } else if (isNaN(cuaTien) && !isNaN(conTien)) {
+                    // Chỉ nhập tiền Con
+                    const tienCaiToBet = (2 * conTien) / (1 + tyLeCai);
+                    resultText = `Cái đánh ${tienCaiToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+                    isCalculationPossible = true;
+                } else if (!isNaN(cuaTien) && !isNaN(conTien)) {
+                    // Nhập cả hai
+                    resultText = 'Vui lòng chỉ nhập số tiền vào **MỘT** trong hai ô (Con hoặc Cái) để tính toán.';
+                } else {
+                    // Không nhập gì cả
+                    resultText = 'Vui lòng nhập số tiền để tính toán.';
+                }
+
+                if (isCalculationPossible) {
+                    resultText += ', Chúc bạn may mắn!';
+                }
+                
+                resultDiv.innerHTML = resultText;
+                resultDiv.style.display = 'block';
+            });
+
+            // Auto-clear other input when one is typed into
+            cuaTienInput.addEventListener('input', () => {
+                if (cuaTienInput.value !== '') {
+                    conTienInput.value = '';
+                }
+            });
+
+            conTienInput.addEventListener('input', () => {
+                if (conTienInput.value !== '') {
+                    cuaTienInput.value = '';
+                }
+            });
+
+            // --- Theme Selection Logic ---
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    themeOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+
+                    const theme = option.dataset.theme;
+                    document.body.className = '';
+                    if (theme !== 'default') {
+                        document.body.classList.add(`${theme}-theme`);
+                    }
+                    localStorage.setItem('selectedTheme', theme);
+                });
+            });
         });
     </script>
 </body>
