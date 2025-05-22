@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dusi Vua KM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        /* Base Colors & Variables (Monochrome Theme) */
+        :root {
+            --primary-color: #333333; /* Dark Grey for text/accents */
+            --secondary-color: #666666; /* Medium Grey for buttons/highlights */
+            --background-color: #F8F8F8; /* Light Grey background */
+            --text-color: #333333; /* Dark Grey text */
+            --card-background: #FFFFFF; /* White for cards/containers */
+            --border-color: #DDDDDD; /* Light border color */
+            --border-radius: 15px; /* More rounded corners */
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.6s;
+            --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dark Theme (still monochrome but darker) */
+        body.dark-theme {
+            --primary-color: #BBBBBB;
+            --secondary-color: #999999;
+            --background-color: #1A1A1A;
+            --text-color: #F0F0F0;
+            --card-background: #2C2C2C;
+            --border-color: #444444;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Cute Theme (example - using some pastels) */
+        body.cute-theme {
+            --primary-color: #FF69B4; /* Hot Pink */
+            --secondary-color: #87CEEB; /* Sky Blue */
+            --background-color: #FFF0F5; /* Lavender Blush */
+            --text-color: #4B0082; /* Indigo */
+            --card-background: #FFFFFF;
+            --border-color: #F0A0D0;
+            --box-shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif; /* Default text font */
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Hide scrollbar initially for intro */
+            transition: background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease);
+        }
+
+        /* Intro Screen */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--card-background); /* White background for intro */
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column; /* Allow content to stack vertically */
+            justify-content: center;
+            align-items: center;
+            font-family: 'Pacifico', cursive; /* Cute, rounded font for intro */
+            font-size: 5em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 1.2s ease-in-out, /* Faster fade */
+                        transform 1.2s ease-in-out, /* Faster shrink */
+                        clip-path 1.2s ease-in-out; /* Clip-path also faster */
+            z-index: 1000;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+            clip-path: circle(100%); /* Start with full circle */
+            will-change: opacity, transform, clip-path; /* Optimize for animation performance */
+        }
+
+        #intro-screen.hidden {
+            opacity: 0;
+            transform: scale(0.7); /* Shrink slightly */
+            clip-path: circle(0%); /* Collapse to a point */
+        }
+
+        #intro-screen.complete {
+            display: none; /* Fully hide after transition */
+        }
+
+        #intro-text {
+            margin-bottom: 30px; /* Space between text and button */
+        }
+
+        .go-button-container {
+            background-color: var(--secondary-color);
+            padding: 10px 25px; /* Adjust padding for the frame */
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0; /* Hidden initially */
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Removed delay here */
+        }
+
+        .go-button-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #go-button {
+            background: none;
+            border: none;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 5px 10px; /* Padding inside the button for larger click area */
+            transition: color 0.2s ease, transform 0.1s ease;
+        }
+
+        #go-button:hover {
+            color: #EEEEEE; /* Slightly lighter white on hover */
+            transform: scale(1.05);
+        }
+
+        #go-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Main Content */
+        #main-content {
+            background-color: var(--card-background);
+            padding: 45px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 650px;
+            width: 90%;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s var(--transition-ease),
+                        transform 1s var(--transition-ease),
+                        background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease),
+                        box-shadow var(--transition-speed) var(--transition-ease);
+            position: relative; /* Needed for theme selector positioning */
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Theme Selector button (new position) */
+        #theme-select-btn-top {
+            position: absolute;
+            top: 20px; /* Distance from top */
+            right: 20px; /* Distance from right */
+            background-color: var(--primary-color); /* Use primary color for settings icon */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Make it round */
+            width: 50px; /* Icon size */
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9em; /* Smaller font for "Settings" or icon */
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            z-index: 10; /* Ensure it's above other elements */
+            text-align: center;
+            text-decoration: none; /* In case it's an anchor tag */
+            line-height: 1; /* For vertical alignment of text */
+        }
+
+        #theme-select-btn-top:hover {
+            background-color: color-mix(in srgb, var(--primary-color) 80%, black);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        #theme-select-btn-top:active {
+            transform: scale(0.98);
+        }
+
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 35px;
+            font-family: 'Pacifico', cursive; /* Cute font for main title */
+            font-size: 3em;
+            transition: color var(--transition-speed) var(--transition-ease);
+        }
+
+        .menu-item {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 20px 30px;
+            margin: 18px 0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 1.3em;
+            font-weight: 700;
+            border: none;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            padding-left: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item:hover {
+            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
+            transform: translateY(-7px); /* More pronounced lift */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-item:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.disabled {
+            background-color: #CCCCCC; /* Lighter grey for disabled */
+            cursor: not-allowed;
+            opacity: 0.7;
+            box-shadow: none;
+        }
+
+        .menu-item.disabled:hover {
+            background-color: #CCCCCC;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Calculator Section */
+        #calculator-section {
+            background-color: var(--card-background);
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 35px;
+            text-align: left;
+            display: none;
+            animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
+            transition: background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease),
+                        box-shadow var(--transition-speed) var(--transition-ease);
+        }
+
+        @keyframes fadeInFromTop {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #calculator-section h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive; /* Cute font for section title */
+            font-size: 2.5em;
+            transition: color var(--transition-speed) var(--transition-ease);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 1.1em;
+        }
+
+        .input-group input[type="number"] {
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            width: calc(100% - 30px);
+            box-sizing: border-box;
+            color: var(--text-color);
+            background-color: var(--card-background);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color var(--transition-speed) var(--transition-ease);
+        }
+
+        .input-group input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button.calculate-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 30px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button.calculate-btn:hover {
+            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        #result {
+            margin-top: 35px;
+            padding: 25px;
+            background-color: color-mix(in srgb, var(--primary-color) 10%, var(--card-background));
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            display: none;
+            word-wrap: break-word;
+            transition: background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease),
+                        border-color var(--transition-speed) var(--transition-ease);
+        }
+
+        /* Theme Selector Section */
+        #theme-section {
+            background-color: var(--card-background);
+            padding: 35px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 35px;
+            text-align: center;
+            display: none;
+            animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
+            transition: background-color var(--transition-speed) var(--transition-ease),
+                        color var(--transition-speed) var(--transition-ease),
+                        box-shadow var(--transition-speed) var(--transition-ease);
+        }
+
+        #theme-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            transition: color var(--transition-speed) var(--transition-ease);
+        }
+
+        .theme-options {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .theme-option {
+            width: 100px; /* Larger circles */
+            height: 100px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 5px solid transparent; /* Thicker border for selected */
+            transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            font-size: 1em;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .theme-option.default-theme { background-color: #666666; } /* Secondary color of monochrome */
+        .theme-option.dark-theme { background-color: #2C2C2C; } /* Card background of dark monochrome */
+        .theme-option.cute-theme { background-color: #FF69B4; } /* Hot pink for cute theme */
+
+        .theme-option:hover {
+            transform: translateY(-8px); /* More lift */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .theme-option.selected {
+            border-color: var(--secondary-color); /* Highlight with secondary color */
+            transform: scale(1.15); /* More pronounced scale */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #intro-screen {
+                font-size: 3.5em;
+            }
+            #main-content {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            .menu-item {
+                padding: 15px 20px;
+                font-size: 1.1em;
+            }
+            .input-group input[type="number"], button.calculate-btn {
+                font-size: 1.1em;
+                padding: 12px;
+            }
+            .theme-option {
+                width: 80px;
+                height: 80px;
+            }
+            #theme-select-btn-top {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8em;
+                top: 15px;
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #intro-screen {
+                font-size: 2.5em;
+                letter-spacing: 1px;
+            }
+            #main-content {
+                padding: 20px;
+                margin: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .menu-item {
+                font-size: 1em;
+                padding-left: 20px;
+                margin: 10px 0;
+            }
+            #calculator-section h2, #theme-section h2 {
+                font-size: 2em;
+            }
+            .input-group label {
+                font-size: 1em;
+            }
+            .theme-options {
+                gap: 15px;
+            }
+            .theme-option {
+                width: 70px;
+                height: 70px;
+                font-size: 0.8em;
+            }
+            #theme-select-btn-top {
+                width: 35px;
+                height: 35px;
+                font-size: 0.7em;
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div id="intro-text">Dusi Vua KM</div>
+        <div class="go-button-container" id="go-button-container">
+            <button id="go-button">GO</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <button id="theme-select-btn-top">Giao diện</button>
+        
+        <h1>Chào mừng đến với Dusi Vua KM</h1>
+        <button class="menu-item" id="bot-calculate-btn">1. BOT tính ít lỗ nhất</button>
+        <button class="menu-item disabled">2. Update...</button>
+        <button class="menu-item disabled">3. Update...</button>
+        <div id="calculator-section">
+            <h2>BOT tính ít lỗ nhất</h2>
+            <div class="input-group">
+                <label for="cua-tien">Số tiền bên Cái ($):</label>
+                <input type="number" id="cua-tien" placeholder="Nhập số tiền bên Cái">
+            </div>
+            <div class="input-group">
+                <label for="con-tien">Số tiền bên Con ($):</label>
+                <input type="number" id="con-tien" placeholder="Nhập số tiền bên Con">
+            </div>
+            <button class="calculate-btn" id="calculate-loss-btn">Tính toán</button>
+            <div id="result"></div>
+        </div>
+
+        <div id="theme-section">
+            <h2>Chọn giao diện</h2>
+            <div class="theme-options">
+                <div class="theme-option default-theme selected" data-theme="default">Tối giản</div>
+                <div class="theme-option dark-theme" data-theme="dark">Tối</div>
+                <div class="theme-option cute-theme" data-theme="cute">Dễ thương</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const introScreen = document.getElementById('intro-screen');
+            const goButtonContainer = document.getElementById('go-button-container');
+            const goButton = document.getElementById('go-button');
+            const mainContent = document.getElementById('main-content');
+            const botCalculateBtn = document.getElementById('bot-calculate-btn');
+            const themeSelectBtnTop = document.getElementById('theme-select-btn-top');
+            const calculatorSection = document.getElementById('calculator-section');
+            const themeSection = document.getElementById('theme-section');
+            const cuaTienInput = document.getElementById('cua-tien');
+            const conTienInput = document.getElementById('con-tien');
+            const calculateLossBtn = document.getElementById('calculate-loss-btn');
+            const resultDiv = document.getElementById('result');
+            const themeOptions = document.querySelectorAll('.theme-option');
+
+            // --- Intro Animation & GO button logic ---
+            // Show GO button after a short delay (e.g., 1.5 seconds after page load)
+            setTimeout(() => {
+                goButtonContainer.classList.add('visible');
+            }, 1500); // Adjust delay as needed for intro text to settle
+
+            // When GO button is clicked
+            goButton.addEventListener('click', () => {
+                introScreen.classList.add('hidden'); // Start intro screen hiding animation (opacity, transform, clip-path)
+
+                // After intro screen finishes hiding (duration of CSS transition for 'hidden' class, which is 1.2s)
+                setTimeout(() => {
+                    introScreen.classList.add('complete'); // Completely remove intro from flow
+                    document.body.style.overflow = 'auto'; // Re-enable scroll
+                    mainContent.classList.add('visible'); // Show main content
+                }, 1200); // This delay should match the 'transition' duration of #intro-screen
+            });
+
+
+            // --- Navigation Function ---
+            function showSection(sectionToShow) {
+                // Hide all sections first
+                calculatorSection.style.display = 'none';
+                themeSection.style.display = 'none';
+                resultDiv.style.display = 'none'; // Also hide result when switching sections
+
+                // Show the requested section
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                    // Scroll to the section if it's not the initial load of main content
+                    // Check if mainContent is already visible before trying to scroll sections within it
+                    if (mainContent.classList.contains('visible')) {
+                        sectionToShow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }
+
+            // --- Menu Item Click Handlers ---
+            botCalculateBtn.addEventListener('click', () => {
+                showSection(calculatorSection);
+                // Clear inputs when showing calculator
+                cuaTienInput.value = '';
+                conTienInput.value = '';
+            });
+
+            themeSelectBtnTop.addEventListener('click', () => {
+                showSection(themeSection);
+            });
+
+            // --- BOT Calculate Logic ---
+            calculateLossBtn.addEventListener('click', () => {
+                const cuaTien = parseFloat(cuaTienInput.value);
+                const conTien = parseFloat(conTienInput.value);
+                const tyLeCai = 0.95; // Tỷ lệ ăn Cái (0.95 cho mỗi 1 đơn vị đặt)
+                const tyLeCon = 1;    // Tỷ lệ ăn Con (1 cho mỗi 1 đơn vị đặt)
+
+                let resultText = '';
+
+                if (isNaN(cuaTien) && isNaN(conTien)) {
+                    resultText = 'Vui lòng nhập số tiền bên **Cái** hoặc bên **Con** để tính toán.';
+                } else if (!isNaN(cuaTien) && isNaN(conTien)) {
+                    const tienConToBet = (cuaTien * (1 + tyLeCai)) / 2;
+                    const expectedLoss = cuaTien - tienConToBet;
+
+                    resultText = `Để lỗ ít nhất khi đánh **${cuaTien.toLocaleString('vi-VN')}** bên Cái, bạn nên đánh **${tienConToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** bên Con.`;
+                    resultText += `<br>Khoản lỗ cố định (ít nhất): **${Math.abs(expectedLoss).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** mỗi lần cược.`;
+
+                } else if (isNaN(cuaTien) && !isNaN(conTien)) {
+                    const tienCaiToBet = (2 * conTien) / (1 + tyLeCai);
+                    const expectedLoss = tienCaiToBet - conTien;
+
+                    resultText = `Để lỗ ít nhất khi đánh **${conTien.toLocaleString('vi-VN')}** bên Con, bạn nên đánh **${tienCaiToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** bên Cái.`;
+                    resultText += `<br>Khoản lỗ cố định (ít nhất): **${Math.abs(expectedLoss).toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** mỗi lần cược.`;
+
+                } else {
+                    resultText = 'Vui lòng chỉ nhập số tiền vào **MỘT** trong hai ô (Con hoặc Cái) để tính toán.';
+                }
+
+                resultDiv.innerHTML = resultText;
+                resultDiv.style.display = 'block';
+            });
+
+            // Clear other input when one is typed into
+            cuaTienInput.addEventListener('input', () => {
+                if (cuaTienInput.value !== '') {
+                    conTienInput.value = '';
+                }
+            });
+
+            conTienInput.addEventListener('input', () => {
+                if (conTienInput.value !== '') {
+                    cuaTienInput.value = '';
+                }
+            });
+
+            // --- Theme Selector Logic ---
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    themeOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+
+                    const theme = option.dataset.theme;
+                    document.body.className = '';
+                    if (theme !== 'default') {
+                        document.body.classList.add(`${theme}-theme`);
+                    }
+                    localStorage.setItem('selectedTheme', theme);
+                });
+            });
+
+            // Load saved theme on page load
+            const savedTheme = localStorage.getItem('selectedTheme');
+            if (savedTheme && savedTheme !== 'default') {
+                document.body.classList.add(`${savedTheme}-theme`);
+                themeOptions.forEach(option => {
+                    if (option.dataset.theme === savedTheme) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
