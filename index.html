@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Baccarat Hedging Tool - Final Pro</title>
+    <title>Baccarat Hedging Tool - Pro Mobile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -39,7 +39,6 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
             transition: background-color 0.3s ease;
             -webkit-tap-highlight-color: transparent;
         }
@@ -55,11 +54,12 @@
             --color1: #007BFF; /* Blue */
             --color2: #00D2D3; /* Teal */
         }
-
         .light-mode .neon-wrapper {
+             animation: none;
+             background: transparent;
+             border: 1px solid #e0e5f1;
              box-shadow: 0 0 25px -5px rgba(0, 123, 255, 0.4);
         }
-
         .light-mode #balance-btn { background: linear-gradient(90deg, var(--color1), #5e82ff); }
         .light-mode .marquee-container { background-color: var(--content-bg); border-color: #E5E9F2; }
 
@@ -87,10 +87,7 @@
             padding-left: 100%;
             animation: marquee 20s linear infinite;
         }
-        .highlight-text {
-            font-weight: 700;
-            color: var(--highlight-color);
-        }
+        .highlight-text { font-weight: 700; color: var(--highlight-color); }
         .highlight-text i { margin: 0 8px; }
         @keyframes marquee {
             0% { transform: translateX(0%); }
@@ -115,7 +112,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             box-sizing: border-box;
         }
         
@@ -129,9 +126,9 @@
         .player-panel input:focus { --focus-color: var(--color1); }
         .banker-panel input:focus { --focus-color: var(--color2); }
 
-        .center-panel { flex: 0 0 80px; height: 150px; display: flex; align-items: center; justify-content: center; }
-        #balance-btn { width: 70px; height: 70px; font-family: var(--font-main); font-weight: 700; font-size: 1.2rem; border-radius: 50%; border: none; color: #fff; cursor: pointer; background: linear-gradient(45deg, var(--color1), var(--color2)); transition: all 0.3s ease; }
-        #balance-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px -5px var(--color1), 0 0 20px -5px var(--color2); }
+        .center-panel { flex: 0 0 180px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #balance-btn { width: 100%; padding: 12px; font-family: var(--font-main); font-weight: 700; font-size: 1.1rem; border-radius: 10px; border: none; color: #fff; cursor: pointer; background: linear-gradient(90deg, var(--color1), var(--color2)); transition: all 0.3s ease; }
+        #balance-btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px -5px var(--color1), 0 0 20px -5px var(--color2); }
         
         #result-display { display: none; width: 100%; text-align: center; animation: fade-in 0.5s ease; }
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -148,21 +145,32 @@
 
         /* --- Giao diện cho điện thoại --- */
         @media (max-width: 768px) {
-            body { justify-content: flex-start; padding-top: 20px; }
-            .calculator-container { flex-direction: column; gap: 25px; padding: 20px; }
-            .panel { width: 100%; }
-            .center-panel { flex-basis: auto; height: auto; margin: -55px 0; }
+            .calculator-container {
+                flex-direction: column;
+                gap: 25px;
+                padding: 20px 15px;
+            }
+            .panels-wrapper {
+                display: flex;
+                gap: 15px;
+                width: 100%;
+            }
+            .center-panel {
+                flex-basis: auto;
+                width: 100%;
+                height: auto;
+            }
+            /* Thay đổi nút Cân trên mobile */
+            #balance-btn {
+                width: 100%;
+                height: auto;
+                padding: 14px;
+                font-size: 1.2rem;
+                border-radius: 12px;
+            }
+            .panel h2 { font-size: 1.2rem; }
+            .panel input { font-size: 1.5rem; }
         }
-
-        /* --- Máy tính --- */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        #calculator { width: 90%; max-width: 320px; padding: 20px; border-radius: var(--border-radius); background: var(--content-bg); border: 1px solid var(--input-border); }
-        #calc-display { font-family: var(--font-main); width: 100%; padding: 15px; font-size: 2.5em; text-align: right; margin-bottom: 20px; background-color: var(--bg-color); border-radius: 8px; border: none; color: var(--text-color); box-sizing: border-box; }
-        .calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-keys button { padding: 18px 10px; font-size: 1.2em; font-family: var(--font-main); border-radius: 8px; border: none; background-color: #2c334b; color: #fff; cursor: pointer; }
-        .light-mode .calc-keys button { background-color: #e8ecf7; color: var(--text-color); }
-        .calc-keys button.operator { background-color: #3A415E; color: var(--color1); }
-        .light-mode .calc-keys button.operator { background-color: #d8e1fa; }
 
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
@@ -171,7 +179,6 @@
 
     <div class="controls">
         <button id="theme-toggle" class="control-btn" title="Giao diện"><i class="fas fa-moon"></i></button>
-        <button id="calculator-toggle" class="control-btn" title="Máy tính"><i class="fas fa-calculator"></i></button>
     </div>
 
     <div class="marquee-wrapper">
@@ -183,14 +190,22 @@
 
     <div class="main-wrapper">
         <div class="calculator-container">
-            <div class="panel player-panel">
-                <h2>CON</h2>
-                <input type="number" id="player-bet" placeholder="0" inputmode="numeric">
-                <p class="payout">x 1.00</p>
+            <div class="panels-wrapper">
+                <div class="panel player-panel">
+                    <h2>CON</h2>
+                    <input type="number" id="player-bet" placeholder="0" inputmode="numeric">
+                    <p class="payout">x 1.00</p>
+                </div>
+                
+                <div class="panel banker-panel">
+                    <h2>CÁI</h2>
+                    <input type="number" id="banker-bet" placeholder="0" inputmode="numeric">
+                    <p class="payout">x 0.95</p>
+                </div>
             </div>
 
             <div class="panel center-panel">
-                <button id="balance-btn">Cân</button>
+                <button id="balance-btn">Cân Cửa</button>
                 <div id="result-display">
                     <h3 id="result-title"></h3>
                     <div id="result-value">
@@ -201,44 +216,9 @@
                 </div>
             </div>
             
-            <div class="panel banker-panel">
-                <h2>CÁI</h2>
-                <input type="number" id="banker-bet" placeholder="0" inputmode="numeric">
-                <p class="payout">x 0.95</p>
-            </div>
         </div>
     </div>
     
-    <div id="calculator-modal" class="modal">
-        <div id="calculator">
-            <input type="text" id="calc-display" readonly>
-            <div class="calc-keys">
-                <button onclick="clearDisplay()" style="background-color: var(--color2); color: #fff;">C</button>
-                <button class="operator" onclick="appendToDisplay('/')">÷</button>
-                <button class="operator" onclick="appendToDisplay('*')">×</button>
-                <button class="operator" onclick="backspace()">⌫</button>
-                
-                <button onclick="appendToDisplay('7')">7</button>
-                <button onclick="appendToDisplay('8')">8</button>
-                <button onclick="appendToDisplay('9')">9</button>
-                <button class="operator" onclick="appendToDisplay('-')">−</button>
-
-                <button onclick="appendToDisplay('4')">4</button>
-                <button onclick="appendToDisplay('5')">5</button>
-                <button onclick="appendToDisplay('6')">6</button>
-                <button class="operator" onclick="appendToDisplay('+')">+</button>
-
-                <button onclick="appendToDisplay('1')">1</button>
-                <button onclick="appendToDisplay('2')">2</button>
-                <button onclick="appendToDisplay('3')">3</button>
-                <button onclick="calculateResult()" class="operator" style="grid-row: span 2;">=</button>
-                
-                <button onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
-                <button onclick="appendToDisplay('.')">.</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         // --- DOM Elements ---
         const playerInput = document.getElementById('player-bet');
@@ -251,9 +231,6 @@
         const copyBtn = document.getElementById('copy-btn');
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
-        const calcModal = document.getElementById('calculator-modal');
-        const calcToggle = document.getElementById('calculator-toggle');
-        const calcDisplay = document.getElementById('calc-display');
         let valueToCopy = '';
 
         // --- Core Logic ---
@@ -314,18 +291,6 @@
             themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
         });
 
-        // --- Calculator Logic ---
-        calcToggle.addEventListener('click', () => { calcModal.style.display = 'flex'; });
-        calcModal.addEventListener('click', (event) => { if(event.target === calcModal) calcModal.style.display = 'none'; });
-        
-        function appendToDisplay(value) { calcDisplay.value += value; }
-        function clearDisplay() { calcDisplay.value = ''; }
-        function backspace() { calcDisplay.value = calcDisplay.value.slice(0, -1); }
-        function calculateResult() {
-            try {
-                calcDisplay.value = eval(calcDisplay.value.replace('×', '*').replace('÷','/').replace(/[^0-9/*\-+.()]/g, ''));
-            } catch { calcDisplay.value = 'Error'; }
-        }
     </script>
 </body>
 </html>
