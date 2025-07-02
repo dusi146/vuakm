@@ -2,995 +2,314 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dusi Vua KM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Baccarat Hedging Tool - Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Base Colors & Variables (Monochrome Theme) */
         :root {
-            --primary-color: #333333; /* Dark Grey for text/accents */
-            --secondary-color: #666666; /* Medium Grey for buttons/highlights */
-            --background-color: #F8F8F8; /* Light Grey background */
-            --text-color: #333333; /* Dark Grey text */
-            --card-background: #FFFFFF; /* White for cards/containers */
-            --border-color: #DDDDDD; /* Light border color */
-            --border-radius: 15px; /* More rounded corners */
-            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            --transition-speed: 0.6s;
-            --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --star-color: #CCCCCC; /* Default star color for light background */
+            --bg-color: #10141F;
+            --content-bg: #1A1F32;
+            --input-bg: #10141F;
+            --input-border: #3A415E;
+            --text-color: #E0E5F5;
+            --text-muted: #7A89B1;
+            --font-main: 'Inter', sans-serif;
+            --color1: #00E5FF; /* Cyan */
+            --color2: #E500FF; /* Magenta */
+            --border-radius: 16px;
         }
 
-        /* Dark Theme (still monochrome but darker) */
-        body.dark-theme {
-            --primary-color: #BBBBBB;
-            --secondary-color: #999999;
-            --background-color: #1A1A1A;
-            --text-color: #F0F0F0;
-            --card-background: #2C2C2C;
-            --border-color: #444444;
-            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            --star-color: #E0E0E0; /* Brighter stars for dark background */
+        @keyframes animated-gradient-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
-        /* Cute Theme (example - using some pastels) */
-        body.cute-theme {
-            --primary-color: #FF69B4; /* Hot Pink */
-            --secondary-color: #87CEEB; /* Sky Blue */
-            --background-color: #FFF0F5; /* Lavender Blush */
-            --text-color: #4B0082; /* Indigo */
-            --card-background: #FFFFFF;
-            --border-color: #F0A0D0;
-            --box-shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
-            --star-color: #99FFFF; /* Cyan for cute theme */
-        }
-
+        
         body {
-            font-family: 'Montserrat', sans-serif; /* Default text font */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
             margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex; /* Make body a flex container to center its child */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            min-height: 100vh; /* Take full viewport height */
-            overflow: hidden; /* Hide scrollbars, especially for stars */
-            position: relative; /* For star positioning */
-            transition: background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease);
-        }
-
-        /* Centering container for intro/main content */
-        .center-container {
-            display: flex; /* Use flex for centering content easily */
-            flex-direction: column; /* Stack children vertically */
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
-            width: 100%; /* Take full width */
-            min-height: 100vh; /* Ensure it covers the viewport for centering */
-            position: absolute; /* Allows elements to overlap with stars but remain centered */
-            top: 0;
-            left: 0;
-        }
-
-        /* Intro Section */
-        #intro-section {
-            background-color: var(--card-background);
-            padding: 45px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            text-align: center;
-            max-width: 650px;
-            width: 90%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 300px;
-            transition: opacity 0.7s var(--transition-ease),
-                        transform 0.7s var(--transition-ease),
-                        background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease);
-            z-index: 2; /* Ensure it's above stars */
-            position: relative; /* For z-index to work */
-        }
-
-        #intro-section.hidden {
-            opacity: 0;
-            transform: translateY(-50px);
-            pointer-events: none;
-        }
-
-        #intro-section h1 {
-            color: var(--primary-color);
-            margin-bottom: 35px;
-            font-family: 'Pacifico', cursive;
-            font-size: 3em;
-            transition: color var(--transition-speed) var(--transition-ease);
-        }
-
-        #intro-section p {
-            font-size: 1.2em;
-            color: var(--text-color);
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        #go-button {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 18px 40px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 1.5em;
-            font-weight: 700;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #go-button:hover {
-            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Main Content - Hidden by default */
-        #main-content {
-            background-color: var(--card-background);
-            padding: 45px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            text-align: center;
-            max-width: 650px;
-            width: 90%;
-            opacity: 0;
-            transform: translateY(50px);
-            position: relative;
-            transition: opacity 0.7s var(--transition-ease),
-                        transform 0.7s var(--transition-ease),
-                        background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease),
-                        box-shadow var(--transition-speed) var(--transition-ease);
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        #main-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-        }
-
-        /* Theme Selector button (top right) */
-        #theme-select-btn-top {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
             justify-content: center;
-            align-items: center;
-            font-size: 0.9em;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            z-index: 10;
-            text-align: center;
-            text-decoration: none;
-            line-height: 1;
-        }
-
-        #theme-select-btn-top:hover {
-            background-color: color-mix(in srgb, var(--primary-color) 80%, black);
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        #theme-select-btn-top:active {
-            transform: scale(0.98);
-        }
-        
-        /* J97 Music Button (top left) */
-        #j97-music-btn-main {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #A0522D; /* Sienna - màu đất */
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9em;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            z-index: 10;
-            text-align: center;
-            text-decoration: none;
-            line-height: 1;
-        }
-
-        #j97-music-btn-main:hover {
-            background-color: color-mix(in srgb, #A0522D 85%, black);
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        #j97-music-btn-main:active {
-            transform: scale(0.98);
-        }
-
-        /* Music Options (J97) Popup */
-        #j97-music-popup {
-            position: absolute;
-            top: 80px; /* Below J97 button */
-            left: 20px;
-            background-color: var(--card-background);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 15px;
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            gap: 10px;
-            z-index: 11; /* Above J97 button and main content */
-            min-width: 150px;
-            text-align: center;
-        }
-
-        #j97-music-popup.visible {
-            display: flex;
-        }
-
-        .music-option {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-        }
-
-        .music-option:hover {
-            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
-            transform: translateY(-2px);
-        }
-        .music-option.selected {
-            background-color: var(--primary-color); /* Highlight selected song */
-            border: 2px solid white;
-            transform: scale(1.05);
-        }
-
-
-        .main-title {
-            color: var(--primary-color);
-            margin-bottom: 35px;
-            font-family: 'Pacifico', cursive;
-            font-size: 3em;
-            transition: color var(--transition-speed) var(--transition-ease);
-        }
-
-        .menu-item {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 20px 30px;
-            margin: 18px 0;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 1.3em;
-            font-weight: 700;
-            border: none;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            text-align: left;
-            padding-left: 40px;
-            letter-spacing: 0.5px;
-        }
-
-        .menu-item:hover {
-            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
-            transform: translateY(-7px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .menu-item:active {
-            transform: translateY(0);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-item.disabled {
-            background-color: #CCCCCC;
-            cursor: not-allowed;
-            opacity: 0.7;
-            box-shadow: none;
-        }
-
-        .menu-item.disabled:hover {
-            background-color: #CCCCCC;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Calculator Section */
-        #calculator-section {
-            background-color: var(--card-background);
-            padding: 35px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-top: 35px;
-            text-align: left;
-            display: none;
-            animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
-            transition: background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease),
-                        box-shadow var(--transition-speed) var(--transition-ease);
-        }
-
-        @keyframes fadeInFromTop {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #calculator-section h2 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
-            font-family: 'Pacifico', cursive;
-            font-size: 2.5em;
-            transition: color var(--transition-speed) var(--transition-ease);
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            margin-bottom: 10px;
-            font-weight: 700;
-            color: var(--text-color);
-            font-size: 1.1em;
-        }
-
-        .input-group input[type="number"] {
-            padding: 15px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            font-size: 1.2em;
-            width: calc(100% - 30px);
-            box-sizing: border-box;
-            color: var(--text-color);
-            background-color: var(--card-background);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color var(--transition-speed) var(--transition-ease);
-        }
-
-        .input-group input[type="number"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        button.calculate-btn {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 18px 30px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 1.3em;
-            font-weight: 700;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 30px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        button.calculate-btn:hover {
-            background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
-            transform: translateY(-5px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
-        }
-
-        #result {
-            margin-top: 35px;
-            padding: 25px;
-            background-color: color-mix(in srgb, var(--primary-color) 10%, var(--card-background));
-            border: 2px solid var(--primary-color);
-            border-radius: var(--border-radius);
-            font-size: 1.2em;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-            display: none;
-            word-wrap: break-word;
-            transition: background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease),
-                        border-color var(--transition-speed) var(--transition-ease);
-        }
-
-        /* Theme Selector Section */
-        #theme-section {
-            background-color: var(--card-background);
-            padding: 35px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-top: 35px;
-            text-align: center;
-            display: none;
-            animation: fadeInFromTop 0.7s var(--transition-ease) forwards;
-            transition: background-color var(--transition-speed) var(--transition-ease),
-                        color var(--transition-speed) var(--transition-ease),
-                        box-shadow var(--transition-speed) var(--transition-ease);
-        }
-
-        #theme-section h2 {
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-family: 'Pacifico', cursive;
-            font-size: 2.5em;
-            transition: color var(--transition-speed) var(--transition-ease);
-        }
-
-        .theme-options {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-
-        .theme-option {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 5px solid transparent;
-            transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-            font-size: 1em;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .theme-option.default-theme { background-color: #666666; }
-        .theme-option.dark-theme { background-color: #2C2C2C; }
-        .theme-option.cute-theme { background-color: #FF69B4; }
-
-        .theme-option:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .theme-option.selected {
-            border-color: var(--secondary-color);
-            transform: scale(1.15);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            #intro-section, #main-content {
-                padding: 30px;
-            }
-            #intro-section h1, .main-title {
-                font-size: 2.2em;
-            }
-            .menu-item {
-                padding: 15px 20px;
-                font-size: 1.1em;
-            }
-            .input-group input[type="number"], button.calculate-btn {
-                font-size: 1.1em;
-                padding: 12px;
-            }
-            .theme-option {
-                width: 80px;
-                height: 80px;
-            }
-            #theme-select-btn-top, #j97-music-btn-main {
-                width: 40px;
-                height: 40px;
-                font-size: 0.8em;
-                top: 15px;
-                right: 15px;
-                left: 15px;
-            }
-            #j97-music-popup {
-                top: 70px;
-                left: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #intro-section, #main-content {
-                padding: 20px;
-                margin: 20px;
-            }
-            #intro-section h1, .main-title {
-                font-size: 1.8em;
-            }
-            #intro-section p {
-                font-size: 1em;
-            }
-            #go-button {
-                font-size: 1.2em;
-                padding: 15px 30px;
-            }
-            .menu-item {
-                font-size: 1em;
-                padding-left: 20px;
-                margin: 10px 0;
-            }
-            #calculator-section h2, #theme-section h2 {
-                font-size: 2em;
-            }
-            .input-group label {
-                font-size: 1em;
-            }
-            .theme-options {
-                gap: 15px;
-            }
-            .theme-option {
-                width: 70px;
-                height: 70px;
-                font-size: 0.8em;
-            }
-            #theme-select-btn-top, #j97-music-btn-main {
-                width: 35px;
-                height: 35px;
-                font-size: 0.7em;
-                top: 10px;
-                right: 10px;
-                left: 10px;
-            }
-            #j97-music-popup {
-                top: 60px;
-                left: 10px;
-                min-width: 120px;
-            }
-        }
-
-        /* Youtube Player (hidden) */
-        #youtube-player-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            z-index: -1;
-            width: 1px;
-            height: 1px;
+            min-height: 100vh;
             overflow: hidden;
-            opacity: 0;
-            pointer-events: none;
+            transition: background-color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Starfall Effect */
-        .star {
-            position: fixed;
-            background-color: var(--star-color); /* Use CSS variable for color */
-            border-radius: 50%;
-            animation: fall linear infinite;
-            z-index: 1; /* Under main content */
-            opacity: 0;
-            display: none; /* Hidden by default, shown by JS when body has show-stars class */
+        /* --- Chế độ Sáng --- */
+        body.light-mode {
+            --bg-color: #F0F2F5;
+            --content-bg: #FFFFFF;
+            --input-bg: #F0F2F5;
+            --input-border: #DDE1EC;
+            --text-color: #1A1F32;
+            --text-muted: #5E6A8C;
         }
 
-        body.show-stars .star {
-            display: block; /* Show stars when body has show-stars class */
+        .light-mode .main-wrapper {
+             animation: none;
+             background: #FFFFFF;
+             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+             border: 1px solid #E5E9F2;
         }
 
-        @keyframes fall {
-            from {
-                transform: translateY(-100vh) translateX(0);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(100vh) translateX(var(--star-drift));
-                opacity: 1;
-            }
+        .light-mode #balance-btn {
+            background: linear-gradient(90deg, var(--color1), #5e82ff);
         }
+
+        .light-mode .marquee-container {
+             background-color: var(--content-bg);
+             border-color: #E5E9F2;
+        }
+
+        /* --- Thanh chạy chữ --- */
+        .marquee-container {
+            width: 90vw;
+            max-width: 700px;
+            padding: 8px 0;
+            margin-bottom: 30px;
+            background-color: var(--content-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--input-border);
+        }
+        .marquee-text {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .main-wrapper {
+            padding: 3px;
+            border-radius: calc(var(--border-radius) + 2px);
+            background: linear-gradient(90deg, var(--color1), var(--color2), var(--color1));
+            background-size: 300% 300%;
+            animation: animated-gradient-border 8s ease-in-out infinite;
+            box-shadow: 0 0 40px -10px var(--color2), 0 0 30px -15px var(--color1);
+        }
+
+        .calculator-container {
+            width: 90vw;
+            max-width: 700px;
+            background: var(--content-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+        
+        .panel { flex: 1; text-align: center; }
+        .panel h2 { font-size: 1.5rem; font-weight: 700; margin: 0 0 20px 0; color: var(--text-muted); }
+        .player-panel h2 { color: var(--color1); }
+        .banker-panel h2 { color: var(--color2); }
+        .panel .payout { font-size: 0.9rem; font-weight: 500; margin-top: 15px; color: var(--text-muted); }
+        .panel input { width: 100%; padding: 12px; font-family: var(--font-main); font-size: 1.8rem; font-weight: 700; text-align: center; background-color: var(--input-bg); color: var(--text-color); border: 2px solid var(--input-border); border-radius: 10px; outline: none; box-sizing: border-box; transition: all 0.2s ease; }
+        .panel input:focus { border-color: var(--focus-color); box-shadow: 0 0 15px -2px var(--focus-color); }
+        .player-panel input:focus { --focus-color: var(--color1); }
+        .banker-panel input:focus { --focus-color: var(--color2); }
+
+        .center-panel { flex: 0 0 180px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #balance-btn { width: 100%; padding: 12px; font-family: var(--font-main); font-weight: 700; font-size: 1.1rem; border-radius: 10px; border: none; color: #fff; cursor: pointer; background: linear-gradient(90deg, var(--color1), var(--color2)); transition: all 0.3s ease; }
+        #balance-btn:hover { box-shadow: 0 0 20px -5px var(--color1), 0 0 20px -5px var(--color2); transform: translateY(-2px); }
+        #result-display { display: none; width: 100%; text-align: center; animation: fade-in 0.5s ease; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #result-display h3 { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); margin: 0 0 10px 0; }
+        #result-value { font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #copy-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
+        #copy-btn:hover { color: var(--text-color); }
+        #total-loss { margin-top: 15px; font-size: 0.9rem; color: var(--text-muted); }
+        #total-loss span { font-weight: 700; color: var(--text-color); }
+
+        /* Controls */
+        .controls { position: fixed; top: 15px; right: 20px; display: flex; gap: 20px; z-index: 20; }
+        .control-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.2s; }
+        .control-btn:hover { color: var(--text-color); }
+
+        /* Calculator Modal */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        #calculator { width: 90%; max-width: 320px; padding: 20px; border-radius: var(--border-radius); background: var(--content-bg); border: 1px solid var(--input-border); }
+        #calc-display { font-family: var(--font-main); width: 100%; padding: 15px; font-size: 2.5em; text-align: right; margin-bottom: 20px; background-color: var(--bg-color); border-radius: 8px; border: none; color: var(--text-color); box-sizing: border-box; }
+        .calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-keys button { padding: 18px 10px; font-size: 1.2em; font-family: var(--font-main); border-radius: 8px; border: none; background-color: #2c334b; color: #fff; cursor: pointer; }
+        .light-mode .calc-keys button { background-color: #e8ecf7; color: var(--text-color); }
+        .calc-keys button.operator { background-color: #3A415E; color: var(--color1); }
+        .light-mode .calc-keys button.operator { background-color: #d8e1fa; }
+
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 </head>
 <body>
-    <div class="center-container">
-        <div id="intro-section">
-            <h1 class="main-title">Chào mừng đến với Dusi Vua KM</h1>
-            <p>Đây là trang web hỗ trợ bạn trong việc tính toán và tối ưu hóa các chiến lược nhỏ.</p>
-            <button id="go-button">GO</button>
-        </div>
 
-        <div id="main-content">
-            <button id="theme-select-btn-top">Giao diện</button>
-            <button id="j97-music-btn-main">J97</button>
+    <div class="controls">
+        <button id="theme-toggle" class="control-btn" title="Giao diện"><i class="fas fa-moon"></i></button>
+        <button id="calculator-toggle" class="control-btn" title="Máy tính"><i class="fas fa-calculator"></i></button>
+    </div>
+
+    <div class="marquee-container">
+        <div class="marquee-text">TOOL TÍNH TOÁN CÂN CỬA CHO AE BÀO KHUYẾN MÃI, LÀM VIỆC KHÔNG PHẢI ĐÁNH BẠC</div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="calculator-container">
+            <div class="panel player-panel">
+                <h2>CON</h2>
+                <input type="number" id="player-bet" placeholder="0" inputmode="numeric">
+                <p class="payout">x 1.00</p>
+            </div>
+
+            <div class="panel center-panel">
+                <button id="balance-btn">Cân Cửa</button>
+                <div id="result-display">
+                    <h3 id="result-title"></h3>
+                    <div id="result-value">
+                        <span id="result-amount"></span>
+                        <button id="copy-btn" title="Copy"><i class="far fa-copy"></i></button>
+                    </div>
+                    <p id="total-loss"></p>
+                </div>
+            </div>
             
-            <div id="j97-music-popup">
-                <button class="music-option" data-video-id="r5Lq2Y1K220">Hồng Nhan</button>
-                <button class="music-option" data-video-id="E80e9D51L3Y">Bạc Phận</button>
-                <button class="music-option" data-video-id="G9bM-dGqQeM">Sống Chó</button>
-                <button class="music-option" id="stop-music-btn">Dừng nhạc</button>
-            </div>
-
-            <h1 class="main-title">Chào mừng đến với Dusi Vua KM</h1>
-            <button class="menu-item" id="bot-calculate-btn">1. BOT tính ít lỗ nhất</button>
-            <button class="menu-item disabled">2. Update...</button>
-            <button class="menu-item disabled">3. Update...</button>
-
-            <div id="calculator-section">
-                <h2>BOT tính ít lỗ nhất</h2>
-                <div class="input-group">
-                    <label for="cua-tien">Số tiền bên Cái ($):</label>
-                    <input type="number" id="cua-tien" placeholder="Nhập số tiền bên Cái">
-                </div>
-                <div class="input-group">
-                    <label for="con-tien">Số tiền bên Con ($):</label>
-                    <input type="number" id="con-tien" placeholder="Nhập số tiền bên Con">
-                </div>
-                <button class="calculate-btn" id="calculate-loss-btn">Tính toán</button>
-                <div id="result"></div>
-            </div>
-
-            <div id="theme-section">
-                <h2>Chọn giao diện</h2>
-                <div class="theme-options">
-                    <div class="theme-option default-theme selected" data-theme="default">Tối giản</div>
-                    <div class="theme-option dark-theme" data-theme="dark">Tối</div>
-                    <div class="theme-option cute-theme" data-theme="cute">Dễ thương</div>
-                </div>
+            <div class="panel banker-panel">
+                <h2>CÁI</h2>
+                <input type="number" id="banker-bet" placeholder="0" inputmode="numeric">
+                <p class="payout">x 0.95</p>
             </div>
         </div>
     </div>
+    
+    <div id="calculator-modal" class="modal">
+        <div id="calculator">
+            <input type="text" id="calc-display" readonly>
+            <div class="calc-keys">
+                <button onclick="clearDisplay()" style="background-color: var(--color2); color: #fff;">C</button>
+                <button class="operator" onclick="appendToDisplay('/')">÷</button>
+                <button class="operator" onclick="appendToDisplay('*')">×</button>
+                <button class="operator" onclick="backspace()">⌫</button>
+                
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button class="operator" onclick="appendToDisplay('-')">−</button>
 
-    <div id="youtube-player-container">
-        <div id="youtube-player"></div>
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button onclick="calculateResult()" class="operator" style="grid-row: span 2;">=</button>
+                
+                <button onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
+                <button onclick="appendToDisplay('.')">.</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- YouTube IFrame Player API Load ---
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api"; // Correct YouTube API URL
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // --- DOM Elements ---
+        const playerInput = document.getElementById('player-bet');
+        const bankerInput = document.getElementById('banker-bet');
+        const balanceBtn = document.getElementById('balance-btn');
+        const resultDisplay = document.getElementById('result-display');
+        const resultTitle = document.getElementById('result-title');
+        const resultAmount = document.getElementById('result-amount');
+        const totalLoss = document.getElementById('total-loss');
+        const copyBtn = document.getElementById('copy-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        let valueToCopy = '';
 
-        // --- Global Variables for YouTube Player ---
-        let player;
-        let currentPlayingVideoId = null;
-        let isPlayerReady = false;
-        let hasUserInteracted = false; // Track if user has interacted with the page
-
-        // --- YouTube API Functions ---
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0', // Hidden
-                width: '0',  // Hidden
-                videoId: null, // No video initially
-                playerVars: {
-                    'autoplay': 1, // Will be blocked by browsers, but API needs it
-                    'controls': 0, // Hide controls
-                    'loop': 1,      // Loop single video by setting playlist to itself
-                    'playlist': '', // Will be set dynamically
-                    'disablekb': 1, // Disable keyboard controls
-                    'fs': 0,        // Disable fullscreen button
-                    'modestbranding': 1, // Minimize YouTube branding
-                    'mute': 0,      // Not muted by default (user can mute if needed)
-                    'playsinline': 1, // Play inline on mobile
-                    'enablejsapi': 1 // Enable JS control
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+        // --- Core Logic ---
+        function resetState() {
+            resultDisplay.style.display = 'none';
+            balanceBtn.style.display = 'block';
         }
 
-        function onPlayerReady(event) {
-            console.log("YouTube Player is Ready.");
-            isPlayerReady = true;
-            // No automatic play here, waits for user interaction on J97 button
-            // If there's a stored video and user interacted, try to play
-            const savedVideoId = localStorage.getItem('lastPlayedVideoId');
-            if (savedVideoId && hasUserInteracted) {
-                playYoutubeVideo(savedVideoId);
-                // Also update UI to show which song is selected if it was playing
-                document.querySelectorAll('.music-option').forEach(btn => {
-                    if (btn.dataset.videoId === savedVideoId) {
-                        btn.classList.add('selected');
-                    } else {
-                        btn.classList.remove('selected');
-                    }
-                });
-            }
+        function showResult(title, color, amountNeeded, lossAmount) {
+            valueToCopy = Math.round(amountNeeded);
+            resultTitle.textContent = title;
+            resultAmount.textContent = valueToCopy.toLocaleString('vi-VN');
+            resultAmount.style.color = color;
+            totalLoss.innerHTML = `Lỗ: <span>${Math.round(lossAmount).toLocaleString('vi-VN')}</span>`;
+            
+            balanceBtn.style.display = 'none';
+            resultDisplay.style.display = 'block';
         }
 
-        function onPlayerStateChange(event) {
-            // Check if video ended (state = 0) AND there's a video playing
-            if (event.data === YT.PlayerState.ENDED && currentPlayingVideoId) {
-                // If the video ended, play it again to loop
-                player.loadVideoById({
-                    videoId: currentPlayingVideoId,
-                    startSeconds: 0 // Start from the beginning
-                });
-                player.playVideo().catch(e => console.error("Error resuming video:", e));
-            }
-        }
-
-        // Function to play a specific YouTube video
-        function playYoutubeVideo(videoId) {
-            if (!isPlayerReady) {
-                console.warn("YouTube Player not ready yet. Storing video ID and trying to play on user interaction.");
-                currentPlayingVideoId = videoId;
-                localStorage.setItem('lastPlayedVideoId', videoId);
-                return;
-            }
-            if (currentPlayingVideoId === videoId && player.getPlayerState() === YT.PlayerState.PLAYING) {
-                // If the same video is already playing, do nothing
-                return;
-            }
-
-            currentPlayingVideoId = videoId; // Update currently playing video ID
-            localStorage.setItem('lastPlayedVideoId', videoId); // Save to localStorage
-
-            // Load and play the video
-            player.loadVideoById({
-                videoId: videoId,
-                'playlist': videoId, // For single video looping
-                startSeconds: 0
-            });
-            player.playVideo().catch(e => {
-                console.error("Lỗi khi phát video:", e);
-                // Inform user if autoplay is blocked
-                // This alert is crucial as browsers block autoplay without prior user interaction
-                alert("Trình duyệt có thể chặn tự động phát. Vui lòng click lại nút nhạc hoặc tương tác với trang để bật nhạc.");
-            });
-        }
-
-        // Function to stop music
-        function stopYoutubeVideo() {
-            if (player && player.getPlayerState() !== YT.PlayerState.ENDED) {
-                player.stopVideo();
-                currentPlayingVideoId = null;
-                localStorage.removeItem('lastPlayedVideoId'); // Clear saved video
-                document.querySelectorAll('.music-option').forEach(btn => btn.classList.remove('selected'));
-            }
-        }
-
-        // --- Starfall Effect ---
-        let starInterval;
-        const bodyElement = document.body;
-
-        function createStar() {
-            const star = document.createElement('div');
-            star.classList.add('star');
-            document.body.appendChild(star);
-
-            const size = Math.random() * 3 + 1; // 1px to 4px
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.left = `${Math.random() * 100}vw`; // Random horizontal position
-            star.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5s to 10s
-            star.style.animationDelay = `${Math.random() * -5}s`; // Negative delay for immediate start
-            star.style.setProperty('--star-drift', `${(Math.random() - 0.5) * 200}px`); // Drift left/right
-            star.style.opacity = `${Math.random() * 0.7 + 0.3}`; // Random opacity
-
-            star.addEventListener('animationend', () => {
-                star.remove();
-            });
-        }
-
-        function startStarfall() {
-            stopStarfall(); // Clear any existing stars/intervals first
-            bodyElement.classList.add('show-stars'); // Add class to body to show stars
-            starInterval = setInterval(createStar, 200); // Create a star every 200ms
-        }
-
-        function stopStarfall() {
-            clearInterval(starInterval);
-            starInterval = null;
-            bodyElement.classList.remove('show-stars'); // Remove class to hide stars
-            document.querySelectorAll('.star').forEach(star => star.remove()); // Remove all existing star elements
-        }
-
-
-        // --- DOMContentLoaded Event Listener ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const introSection = document.getElementById('intro-section');
-            const goButton = document.getElementById('go-button');
-            const mainContent = document.getElementById('main-content');
-            const botCalculateBtn = document.getElementById('bot-calculate-btn');
-            const themeSelectBtnTop = document.getElementById('theme-select-btn-top');
-            const calculatorSection = document.getElementById('calculator-section');
-            const themeSection = document.getElementById('theme-section');
-            const cuaTienInput = document.getElementById('cua-tien');
-            const conTienInput = document.getElementById('con-tien');
-            const calculateLossBtn = document.getElementById('calculate-loss-btn');
-            const resultDiv = document.getElementById('result');
-            const themeOptions = document.querySelectorAll('.theme-option');
-
-            // Music Buttons
-            const j97MusicBtnMain = document.getElementById('j97-music-btn-main');
-            const j97MusicPopup = document.getElementById('j97-music-popup');
-            const musicOptions = document.querySelectorAll('#j97-music-popup .music-option');
-            const stopMusicBtn = document.getElementById('stop-music-btn');
-
-            // --- Initial Setup ---
-            // Load saved theme on page load
-            const savedTheme = localStorage.getItem('selectedTheme');
-            if (savedTheme && savedTheme !== 'default') {
-                document.body.classList.add(`${savedTheme}-theme`);
-                themeOptions.forEach(option => {
-                    if (option.dataset.theme === savedTheme) {
-                        option.classList.add('selected');
-                    } else {
-                        option.classList.remove('selected');
-                    }
-                });
-            }
-
-            // Flag user interaction on any click (this is critical for autoplay)
-            document.body.addEventListener('click', () => {
-                if (!hasUserInteracted) {
-                    hasUserInteracted = true;
-                    console.log("User interacted. Attempting to play saved music.");
-                    // Try to play any saved music if player is ready and a video was selected
-                    if (isPlayerReady && localStorage.getItem('lastPlayedVideoId')) {
-                        playYoutubeVideo(localStorage.getItem('lastPlayedVideoId'));
-                    }
-                }
-            }, { once: true }); // Only listen for the first click on the body
-
-            // --- Intro and Main Content Visibility ---
-            goButton.addEventListener('click', () => {
-                introSection.classList.add('hidden'); // Hide intro
-                setTimeout(() => {
-                    introSection.style.display = 'none';
-                    mainContent.style.display = 'block'; // Make main content block
-                    mainContent.classList.add('visible'); // Show main content with animation
-                    startStarfall(); // Start starfall when main content is visible
-                }, 700); // Match CSS transition duration
-            });
-
-            // --- Navigation Function ---
-            function showSection(sectionToShow) {
-                calculatorSection.style.display = 'none';
-                themeSection.style.display = 'none';
-                resultDiv.style.display = 'none';
-                j97MusicPopup.classList.remove('visible'); // Hide music popup when changing section
-
-                if (sectionToShow) {
-                    sectionToShow.style.display = 'block';
-                    sectionToShow.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-
-            // --- Menu Button Event Listeners ---
-            botCalculateBtn.addEventListener('click', () => {
-                showSection(calculatorSection);
-                // Clear inputs when opening the calculator
-                cuaTienInput.value = '';
-                conTienInput.value = '';
-            });
-
-            themeSelectBtnTop.addEventListener('click', () => {
-                showSection(themeSection);
-            });
-
-            // --- J97 Music Button Logic ---
-            j97MusicBtnMain.addEventListener('click', (event) => {
-                j97MusicPopup.classList.toggle('visible');
-                event.stopPropagation(); // Prevent click from bubbling to document.body
-            });
-
-            // Hide music popup when clicking anywhere else on the document
-            document.body.addEventListener('click', (event) => {
-                if (j97MusicPopup.classList.contains('visible') && !j97MusicPopup.contains(event.target) && event.target !== j97MusicBtnMain) {
-                    j97MusicPopup.classList.remove('visible');
-                }
-            });
-
-            // Event listeners for individual music options
-            musicOptions.forEach(button => {
-                button.addEventListener('click', () => {
-                    const videoId = button.dataset.videoId;
-                    musicOptions.forEach(btn => btn.classList.remove('selected'));
-                    button.classList.add('selected');
-                    
-                    playYoutubeVideo(videoId);
-                });
-            });
-
-            // Event listener for Stop Music button
-            stopMusicBtn.addEventListener('click', () => {
-                stopYoutubeVideo();
-            });
-
-            // --- Calculator Logic ---
-            calculateLossBtn.addEventListener('click', () => {
-                const cuaTien = parseFloat(cuaTienInput.value);
-                const conTien = parseFloat(conTienInput.value);
-                const tyLeCai = 0.95; // Tỷ lệ ăn Cái (0.95 cho mỗi 1 đơn vị đặt)
-
-                let resultText = '';
-                let isCalculationPossible = false;
-
-                if (!isNaN(cuaTien) && isNaN(conTien)) {
-                    // Chỉ nhập tiền Cái
-                    const tienConToBet = (cuaTien * (1 + tyLeCai)) / 2;
-                    resultText = `Con đánh ${tienConToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-                    isCalculationPossible = true;
-                } else if (isNaN(cuaTien) && !isNaN(conTien)) {
-                    // Chỉ nhập tiền Con
-                    const tienCaiToBet = (2 * conTien) / (1 + tyLeCai);
-                    resultText = `Cái đánh ${tienCaiToBet.toLocaleString('vi-VN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-                    isCalculationPossible = true;
-                } else if (!isNaN(cuaTien) && !isNaN(conTien)) {
-                    // Nhập cả hai
-                    resultText = 'Vui lòng chỉ nhập số tiền vào **MỘT** trong hai ô (Con hoặc Cái) để tính toán.';
-                } else {
-                    // Không nhập gì cả
-                    resultText = 'Vui lòng nhập số tiền để tính toán.';
-                }
-
-                if (isCalculationPossible) {
-                    resultText += ', Chúc bạn may mắn!';
-                }
-                
-                resultDiv.innerHTML = resultText;
-                resultDiv.style.display = 'block';
-            });
-
-            // Auto-clear other input when one is typed into
-            cuaTienInput.addEventListener('input', () => {
-                if (cuaTienInput.value !== '') {
-                    conTienInput.value = '';
-                }
-            });
-
-            conTienInput.addEventListener('input', () => {
-                if (conTienInput.value !== '') {
-                    cuaTienInput.value = '';
-                }
-            });
-
-            // --- Theme Selection Logic ---
-            themeOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    themeOptions.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-
-                    const theme = option.dataset.theme;
-                    document.body.className = ''; // Clear existing theme classes
-                    if (theme !== 'default') {
-                        document.body.classList.add(`${theme}-theme`);
-                    }
-                    localStorage.setItem('selectedTheme', theme);
-
-                    // Re-apply starfall effect to update star color
-                    if (mainContent.classList.contains('visible')) {
-                        startStarfall();
-                    }
-                });
-            });
+        playerInput.addEventListener('input', () => { 
+            if (playerInput.value) bankerInput.value = '';
+            resetState();
         });
+        bankerInput.addEventListener('input', () => { 
+            if (bankerInput.value) playerInput.value = '';
+            resetState();
+        });
+
+        balanceBtn.addEventListener('click', () => {
+            const playerBet = parseFloat(playerInput.value);
+            const bankerBet = parseFloat(bankerInput.value);
+            
+            if (!playerBet && !bankerBet) return;
+
+            if (playerBet > 0) {
+                const bankerNeeded = playerBet * (2 / 1.95);
+                const loss = bankerNeeded - playerBet;
+                showResult('Đánh bên CÁI', 'var(--color2)', bankerNeeded, loss);
+            } else if (bankerBet > 0) {
+                const playerNeeded = bankerBet * (1.95 / 2);
+                const loss = bankerBet - playerNeeded;
+                showResult('Đánh bên CON', 'var(--color1)', playerNeeded, loss);
+            }
+        });
+        
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(valueToCopy).then(() => {
+                const originalIcon = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { copyBtn.innerHTML = originalIcon; }, 1500);
+            }).catch(err => alert('Lỗi copy!', err));
+        });
+
+        // --- Theme Toggle ---
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        // --- Calculator Logic ---
+        const calcModal = document.getElementById('calculator-modal');
+        const calcToggle = document.getElementById('calculator-toggle');
+        const calcDisplay = document.getElementById('calc-display');
+
+        calcToggle.addEventListener('click', () => { calcModal.style.display = 'flex'; });
+        calcModal.addEventListener('click', (event) => { if(event.target === calcModal) calcModal.style.display = 'none'; });
+        
+        function appendToDisplay(value) { calcDisplay.value += value; }
+        function clearDisplay() { calcDisplay.value = ''; }
+        function backspace() { calcDisplay.value = calcDisplay.value.slice(0, -1); }
+        function calculateResult() {
+            try {
+                calcDisplay.value = eval(calcDisplay.value.replace('×', '*').replace('÷','/').replace(/[^0-9/*\-+.()]/g, ''));
+            } catch { calcDisplay.value = 'Error'; }
+        }
     </script>
 </body>
 </html>
